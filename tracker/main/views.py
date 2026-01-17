@@ -59,6 +59,7 @@ class HomeListView(LoginRequiredMixin, ListView):
 
         user = self.request.user
 
+        context['title'] = 'Главная страница'
         # форма
         context['form'] = self.form_class(self.request.GET)
 
@@ -80,4 +81,38 @@ class HomeListView(LoginRequiredMixin, ListView):
         return context
 
 
+class TasksListView(LoginRequiredMixin, ListView):
+    model = Task
+    template_name = 'main/tasks.html'
+    context_object_name = 'tasks'
+    paginate_by = 7
+    form_class = TaskFilterForm
+
+    def get_queryset(self):
+        queryset = Task.objects.filter(
+            user=self.request.user
+        )
+        form = self.form_class(
+            self.request.GET
+        )
+        if form.is_valid():
+            cd = form.cleaned_data
+            if cd.get('search'):
+                queryset = queryset.filter(title__icontains=cd['search'])
+
+            if cd.get('status'):
+                queryset = queryset.filter(status=cd['status'])
+
+            if cd.get('sort'):
+                queryset = queryset.order_by(cd['sort'])
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['form'] = self.form_class(self.request.GET)
+        context['title'] = 'Задачи'
+
+        return context
 
