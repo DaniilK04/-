@@ -33,7 +33,6 @@ class TaskFilterForm(forms.Form):
         label='Статус'
     )
 
-
 class HabitFilterForm(forms.Form):
     search = forms.CharField(
         required=False,
