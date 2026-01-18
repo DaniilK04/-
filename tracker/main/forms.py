@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import *
@@ -111,3 +111,14 @@ class HabitForm(forms.ModelForm):
                 'Дата начала не может быть в будущем'
             )
         return start_date
+
+
+class CustomLoginForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-input',
+        'placeholder': 'Имя пользователя'
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-input',
+        'placeholder': 'Пароль'
+    }))

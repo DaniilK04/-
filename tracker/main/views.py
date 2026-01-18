@@ -8,6 +8,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.utils import timezone
 from datetime import timedelta
 from .mixins import *
+from django.contrib import messages
 
 
 class HomeListView(LoginRequiredMixin, ListView, TaskFilterMixin):
@@ -163,6 +164,7 @@ class HabitsAddView(LoginRequiredMixin, CreateView):
 
 
 class HabitsDetailView(LoginRequiredMixin, DetailView):
+    """ Показ отдельной привычки(1 привычки) пользователя """
     model = Habit
     template_name = 'main/habit_detail.html'
     context_object_name = 'habit'
@@ -210,6 +212,26 @@ class HabitsDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
+
+class UserLoginView(LoginView):
+    """ Вход пользователя в систему """
+    form_class = CustomLoginForm
+    template_name = 'main/login.html'
+    redirect_authenticated_user = True# если уже авторизован — сразу на home
+    # next_page можно убрать, чтобы использовался LOGIN_REDIRECT_URL из settings.py
+
+
+    def form_valid(self, form):
+        messages.success(self.request, f"Добро пожаловать, {form.get_user().username}!")
+        return super().form_valid(form)
+
+
+class UserLogoutView(LogoutView):
+    """ Выход пользователя из системы """
+    # next_page можно убрать, используем LOGOUT_REDIRECT_URL из settings.py
+    def dispatch(self, request, *args, **kwargs):
+        messages.success(request, "Вы успешно вышли из системы")
+        return super().dispatch(request, *args, **kwargs)
 
 
 

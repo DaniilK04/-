@@ -8,6 +8,9 @@ urlpatterns = [
     path('tasks/add/', TaskAddView.as_view(), name='task_add'),
     path('habits/', HabitsListView.as_view(), name='habit'),
     path('habits/add/', HabitsAddView.as_view(), name='habit_add'),
-    path('habits/<slug:slug>/', HabitsDetailView.as_view(), name='habit_detail')
+    path('habits/<slug:slug>/', HabitsDetailView.as_view(), name='habit_detail'),
+    path('login', UserLoginView.as_view(), name='login'),
+    path('logout/', UserLogoutView.as_view(), name='logout'),
+
 
 ]
