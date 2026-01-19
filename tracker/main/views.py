@@ -92,6 +92,16 @@ class TasksListView(LoginRequiredMixin, ListView, TaskFilterMixin):
 
         return context
 
+class TaskDetailView(LoginRequiredMixin, DetailView):
+    model = Task
+    template_name = 'main/task_detail.html'
+    context_object_name = 'task'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
+
 
 class TaskAddView(LoginRequiredMixin, CreateView):
     """ Создание задачи """
@@ -143,7 +153,6 @@ class HabitsListView(LoginRequiredMixin, ListView):
         context['form'] = self.form_class(self.request.GET)
         context['title'] = 'Привычки'
         return context
-
 
 class HabitsAddView(LoginRequiredMixin, CreateView):
     """ Создание привычки """

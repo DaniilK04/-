@@ -3,19 +3,33 @@
 {% block content %}
 <h1>Задачи</h1>
 
-<form method="get" class="filter-form">
-    {{ form.as_p }}
-    <button class="form-button">Применить</button>
-</form>
+<a href="{% url 'task_add' %}" class="form-button" style="margin-bottom: 20px; display:inline-block;">Добавить задачу</a>
 
-{% for task in tasks %}
-    <div class="card">
-        <div class="card-title">{{ task.title }}</div>
-        <div class="card-meta">
-            Дедлайн: {{ task.deadline }}
+<div class="cards-grid">
+    {% for task in tasks %}
+        <div class="card task-card">
+            <a class="card-title" href="{% url 'task_detail' task.slug %}">{{ task.title }}</a>
+            <div class="card-meta">
+                Статус: {{ task.get_status_display }} | Дедлайн: {{ task.deadline }}
+            </div>
         </div>
+    {% empty %}
+        <p>Задач пока нет</p>
+    {% endfor %}
+</div>
+
+{% if is_paginated %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+        {% endif %}
+
+        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+        {% endif %}
     </div>
-{% empty %}
-    <p>Задач нет</p>
-{% endfor %}
+{% endif %}
+
 {% endblock %}

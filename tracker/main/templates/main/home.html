@@ -1,22 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Главная</h1>
 
-<p class="stat">
-    Прогресс привычек за неделю:
-    <strong>{{ habit_progress }}%</strong>
-</p>
+<section class="home">
+    <h1 class="page-title">Главная</h1>
 
-<h2>Активные привычки</h2>
-
-{% for habit in habits %}
-    <div class="card">
-        <a class="card-title" href="{% url 'habit_detail' habit.slug %}">
-            {{ habit.title }}
-        </a>
+    <div class="stats-card">
+        <div class="stats-title">Прогресс привычек за неделю</div>
+        <div class="stats-value">{{ habit_progress }}%</div>
     </div>
-{% empty %}
-    <p>Активных привычек нет</p>
-{% endfor %}
+
+    <h2 class="section-title">Активные привычки</h2>
+
+    <div class="cards-grid">
+        {% for habit in habits %}
+            <div class="card habit-card">
+                <a class="card-title" href="{% url 'habit_detail' habit.slug %}">
+                    {{ habit.title }}
+                </a>
+            </div>
+        {% empty %}
+            <p class="empty-text">Активных привычек пока нет</p>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

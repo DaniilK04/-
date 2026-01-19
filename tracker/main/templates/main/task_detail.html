@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ task.title }}</h1>
+
+<div class="card" style="padding: 30px;">
+    <p><strong>Описание:</strong> {% if task.description %}{{ task.description }}{% else %}Нет описания{% endif %}</p>
+    <p><strong>Статус:</strong> {{ task.get_status_display }}</p>
+    <p><strong>Приоритет:</strong> {{ task.get_priority_display }}</p>
+    <p><strong>Дедлайн:</strong> {{ task.deadline }}</p>
+</div>
+
+<a href="{% url 'task' %}" class="form-button" style="margin-top: 20px; display:inline-block;">Вернуться к списку задач</a>
+{% endblock %}

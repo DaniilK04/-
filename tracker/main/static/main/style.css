@@ -135,4 +135,104 @@ body {
 .logout-btn:hover {
     color: #2563eb;
 }
+/* HOME PAGE */
+.home {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+/* STATS */
+.stats-card {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.stats-title {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 6px;
+}
+
+.stats-value {
+    font-size: 36px;
+    font-weight: 700;
+}
+
+/* SECTIONS */
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* HABITS GRID */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.habit-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.habit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+}
+
+.empty-text {
+    color: #6b7280;
+    font-size: 14px;
+}
+/* HOME HEADER */
+.home-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.home-buttons a {
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-left: 10px;
+    transition: background 0.2s ease;
+}
+
+.btn {
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-primary-outline {
+    background-color: transparent;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+}
+
+.btn-primary-outline:hover {
+    background-color: #2563eb;
+    color: white;
+}
 
