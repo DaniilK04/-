@@ -1,35 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Задачи</h1>
+<section class="tasks-page">
+    <div class="page-header">
+        <h1>Задачи</h1>
+        <a href="{% url 'task_add' %}" class="btn btn-add">Добавить задачу</a>
+    </div>
 
-<a href="{% url 'task_add' %}" class="form-button" style="margin-bottom: 20px; display:inline-block;">Добавить задачу</a>
+    <!-- Фильтр -->
+    <form method="get" class="filter-form">
+        <input type="text" name="search" placeholder="Поиск по названию" value="{{ request.GET.search }}" class="form-input">
 
-<div class="cards-grid">
-    {% for task in tasks %}
-        <div class="card task-card">
-            <a class="card-title" href="{% url 'task_detail' task.slug %}">{{ task.title }}</a>
-            <div class="card-meta">
-                Статус: {{ task.get_status_display }} | Дедлайн: {{ task.deadline }}
+        <select name="status" class="form-input">
+            <option value="">Все статусы</option>
+            <option value="todo" {% if request.GET.status == 'todo' %}selected{% endif %}>Не начал</option>
+            <option value="in_progress" {% if request.GET.status == 'in_progress' %}selected{% endif %}>В процессе</option>
+            <option value="done" {% if request.GET.status == 'done' %}selected{% endif %}>Сделано</option>
+        </select>
+
+        <select name="sort" class="form-input">
+            <option value="">Сортировка</option>
+            <option value="deadline" {% if request.GET.sort == 'deadline' %}selected{% endif %}>По дедлайну</option>
+            <option value="priority" {% if request.GET.sort == 'priority' %}selected{% endif %}>По приоритету</option>
+        </select>
+
+        <button type="submit" class="form-button">Применить</button>
+    </form>
+
+    <!-- Карточки задач -->
+    {% if tasks %}
+    <div class="cards-grid">
+        {% for task in tasks %}
+            <div class="card task-card">
+                <a href="{% url 'task_detail' task.slug %}" class="card-title">{{ task.title }}</a>
+                <div class="card-meta">
+                    Статус: {{ task.get_status_display }}<br>
+                    {% if task.deadline %}Дедлайн: {{ task.deadline }}{% endif %}
+                </div>
             </div>
-        </div>
-    {% empty %}
-        <p>Задач пока нет</p>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty-text">Задач пока нет</p>
+    {% endif %}
 
-{% if is_paginated %}
+    <!-- Пагинация -->
+    {% if is_paginated %}
     <div class="pagination">
         {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-filter">Назад</a>
         {% endif %}
 
         <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-filter">Вперед</a>
         {% endif %}
     </div>
-{% endif %}
-
+    {% endif %}
+</section>
 {% endblock %}

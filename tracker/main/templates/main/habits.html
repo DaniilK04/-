@@ -1,23 +1,56 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Привычки</h1>
-
-<form method="get" class="filter-form">
-    {{ form.as_p }}
-    <button class="form-button">Фильтр</button>
-</form>
-
-{% for habit in habits %}
-    <div class="card">
-        <a class="card-title" href="{% url 'habit_detail' habit.slug %}">
-            {{ habit.title }}
-        </a>
-        <div class="card-meta">
-            {{ habit.get_frequency_display }}
-        </div>
+<section class="habits-page">
+    <div class="page-header">
+        <h1>Привычки</h1>
+        <a href="{% url 'habit_add' %}" class="btn btn-add">Добавить привычку</a>
     </div>
-{% empty %}
-    <p>Привычек нет</p>
-{% endfor %}
+
+    <!-- Фильтр, поиск и сортировка -->
+    <form method="get" class="filter-form">
+        <!-- Поиск -->
+        <input type="text" name="search" placeholder="Поиск по названию"
+               value="{{ request.GET.search }}" class="form-input">
+
+        <!-- Статус активности -->
+        <select name="active" class="form-input">
+            <option value="">Все</option>
+            <option value="true" {% if request.GET.active == 'true' %}selected{% endif %}>Активна</option>
+            <option value="false" {% if request.GET.active == 'false' %}selected{% endif %}>Не активна</option>
+        </select>
+
+        <!-- Частота -->
+        <select name="frequency" class="form-input">
+            <option value="">Все частоты</option>
+            {% for value, label in form.fields.frequency.choices %}
+                <option value="{{ value }}" {% if request.GET.frequency == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <!-- Кнопка применить под всеми полями -->
+        <button type="submit" class="form-button">Применить</button>
+    </form>
+
+    <!-- Сетка карточек привычек -->
+    {% if habits %}
+    <div class="cards-grid">
+        {% for habit in habits %}
+            <div class="card habit-card">
+                <a href="{% url 'habit_detail' habit.slug %}" class="card-title">
+                    {{ habit.title }}
+                </a>
+                <div class="card-meta">
+                    {% if habit.frequency %}Частота: {{ habit.get_frequency_display }}<br>{% endif %}
+                    Статус: {% if habit.is_active %}Активна{% else %}Не активна{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty-text">Привычек пока нет</p>
+    {% endif %}
+</section>
 {% endblock %}
