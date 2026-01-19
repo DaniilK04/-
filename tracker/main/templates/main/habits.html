@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<h1>Привычки</h1>
+
+<form method="get" class="filter-form">
+    {{ form.as_p }}
+    <button class="form-button">Фильтр</button>
+</form>
+
+{% for habit in habits %}
+    <div class="card">
+        <a class="card-title" href="{% url 'habit_detail' habit.slug %}">
+            {{ habit.title }}
+        </a>
+        <div class="card-meta">
+            {{ habit.get_frequency_display }}
+        </div>
+    </div>
+{% empty %}
+    <p>Привычек нет</p>
+{% endfor %}
+{% endblock %}

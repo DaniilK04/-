@@ -172,10 +172,6 @@ class HabitsDetailView(LoginRequiredMixin, DetailView):
     slug_url_kwarg = 'slug'
 
     def get_queryset(self):
-        """
-        Ограничиваем доступ:
-        пользователь может видеть ТОЛЬКО свои привычки
-        """
         return Habit.objects.filter(user=self.request.user)
 
     def get_context_data(self, **kwargs):
@@ -217,12 +213,14 @@ class UserLoginView(LoginView):
     """ Вход пользователя в систему """
     form_class = CustomLoginForm
     template_name = 'main/login.html'
-    redirect_authenticated_user = True# если уже авторизован — сразу на home
-    # next_page можно убрать, чтобы использовался LOGIN_REDIRECT_URL из settings.py
-
+    redirect_authenticated_user = True
+    extra_context = {'title': 'Вход'}
 
     def form_valid(self, form):
-        messages.success(self.request, f"Добро пожаловать, {form.get_user().username}!")
+        messages.success(
+            self.request,
+            f"Добро пожаловать, {form.get_user().username}!"
+        )
         return super().form_valid(form)
 
 
@@ -232,6 +230,26 @@ class UserLogoutView(LogoutView):
     def dispatch(self, request, *args, **kwargs):
         messages.success(request, "Вы успешно вышли из системы")
         return super().dispatch(request, *args, **kwargs)
+
+class UserSignUpView(CreateView):
+    """ Регистрация пользователя на сайте """
+    form_class = CustomSingUpForm
+    template_name = 'main/signup.html'
+    success_url = reverse_lazy('login')
+
+    def dispatch(self, request, *args, **kwargs):
+        # Чтобы залогиненный пользователь не мог зайти на /signup/.
+        if request.user.is_authenticated:
+            # Если user уже авторизированн его редиректит на страницу home
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "Регистрация прошла успешно. Теперь вы можете войти."
+        )
+        return super().form_valid(form)
 
 
 

@@ -9,8 +9,7 @@ urlpatterns = [
     path('habits/', HabitsListView.as_view(), name='habit'),
     path('habits/add/', HabitsAddView.as_view(), name='habit_add'),
     path('habits/<slug:slug>/', HabitsDetailView.as_view(), name='habit_detail'),
-    path('login', UserLoginView.as_view(), name='login'),
+    path('login/', UserLoginView.as_view(), name='login'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
-
-
+    path('signup/', UserSignUpView.as_view(), name='signup')
 ]

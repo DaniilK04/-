@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -122,3 +123,56 @@ class CustomLoginForm(AuthenticationForm):
         'class': 'form-input',
         'placeholder': 'Пароль'
     }))
+
+    """class Meta:
+        model = get_user_model()
+        fields = ['username', 'password']
+        Возвращает текущую форму модели User(пользователя)
+        Вдруг мы используем свою модель бд User, а не стандартную
+        Но сейчас не надо использовать, оно просто работать не будет"""
+
+
+class CustomSingUpForm(UserCreationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-input',
+        'placeholder': 'Имя пользователя'
+    }))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-input',
+        'placeholder': 'Пароль'
+    }))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
+        'class': 'form-input',
+        'placeholder': 'Повтор пароля'
+    }))
+    class Meta:
+        model = User
+        fields = ("username", "email", "first_name", "last_name", "password1", "password2")
+
+        widgets = {
+            'email': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Email'
+            }),
+            'first_name': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Имя'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'form-input',
+                'placeholder': 'Фамилия'
+            })
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).exists():
+            raise ValidationError("Пользователь с таким email уже существует")
+        return email
+
+    def clean_username(self):
+        # Получаем чисты данные из словаря при помощи get
+        username = self.cleaned_data.get('username')
+        if ' ' in username:
+            raise ValidationError("Логин не может содержать пробелы")
+        return username

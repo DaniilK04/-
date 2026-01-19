@@ -1,10 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<h1>Главная</h1>
+
+<p class="stat">
+    Прогресс привычек за неделю:
+    <strong>{{ habit_progress }}%</strong>
+</p>
+
+<h2>Активные привычки</h2>
+
+{% for habit in habits %}
+    <div class="card">
+        <a class="card-title" href="{% url 'habit_detail' habit.slug %}">
+            {{ habit.title }}
+        </a>
+    </div>
+{% empty %}
+    <p>Активных привычек нет</p>
+{% endfor %}
+{% endblock %}

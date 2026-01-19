@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<h1>{{ habit.title }}</h1>
+
+<p>
+    Прогресс за {{ period_days }} дней:
+    <strong>{{ progress_percent }}%</strong>
+</p>
+
+<h2>История</h2>
+
+{% for log in logs %}
+    <div class="card">
+        {{ log.date }} —
+        {% if log.is_done %}✅ Выполнено{% else %}❌ Пропуск{% endif %}
+    </div>
+{% empty %}
+    <p>Нет данных</p>
+{% endfor %}
+{% endblock %}

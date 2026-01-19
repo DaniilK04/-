@@ -2,13 +2,12 @@
 
 {% block content %}
 <div class="form">
-    <h1>Вход</h1>
+    <h1>Регистрация</h1>
 
     <form method="post">
         {% csrf_token %}
-        {{ form.username }}
-        {{ form.password }}
-        <button class="form-button">Войти</button>
+        {{ form.as_p }}
+        <button class="form-button">Зарегистрироваться</button>
     </form>
 </div>
 {% endblock %}

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title|default:"Tracker" }}</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+</head>
+<body>
+
+<header class="header">
+    <div class="container header-inner">
+        <a href="{% url 'home' %}" class="logo">Tracker</a>
+
+        <nav class="nav">
+            {% if user.is_authenticated %}
+                <a href="{% url 'task' %}">Задачи</a>
+                <a href="{% url 'habit' %}">Привычки</a>
+
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Выход</button>
+                </form>
+
+            {% else %}
+                <a href="{% url 'login' %}">Вход</a>
+                <a href="{% url 'signup' %}">Регистрация</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">
+    <div class="container">
+        © Tracker
+    </div>
+</footer>
+
+</body>
+</html>
