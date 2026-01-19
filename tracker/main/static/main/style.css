@@ -301,3 +301,54 @@ body {
     font-weight: 500;
     color: #111827;
 }
+/* ----------------------------- */
+/* ADD FORM STYLES (TASKS & HABITS) */
+/* ----------------------------- */
+.add-form {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    /* убрали transform и hover */
+}
+
+.add-form h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* Поля формы */
+.add-form .form-input,
+.add-form select,
+.add-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    resize: vertical; /* чтобы textarea можно было растягивать вертикально */
+    min-height: 50px; /* красивая высота для textarea */
+}
+
+/* Кнопка Создать */
+.add-form .form-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.add-form .form-button:hover {
+    background-color: #059669;
+}
