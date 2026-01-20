@@ -9,6 +9,7 @@ from django.utils import timezone
 from datetime import timedelta
 from .mixins import *
 from django.contrib import messages
+from django.views import View
 
 
 class HomeListView(LoginRequiredMixin, ListView, TaskFilterMixin):
@@ -173,7 +174,6 @@ class HabitsAddView(LoginRequiredMixin, CreateView):
 
 
 class HabitsDetailView(LoginRequiredMixin, DetailView):
-    """ Показ отдельной привычки(1 привычки) пользователя """
     model = Habit
     template_name = 'main/habit_detail.html'
     context_object_name = 'habit'
@@ -185,37 +185,59 @@ class HabitsDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        habit = self.object
 
-        habit = self.object  # текущая привычка
-
-        # период (например последние 30 дней)
         period_days = 30
         start_date = timezone.now().date() - timedelta(days=period_days)
 
-        # логи привычки за период
+        # Логи привычки за период
         logs = HabitLog.objects.filter(
             habit=habit,
             date__gte=start_date
         ).order_by('date')
 
-        # статистика
+        # Прогресс
         total_days = logs.count()
         done_days = logs.filter(is_done=True).count()
+        progress_percent = int(done_days / total_days * 100) if total_days else 0
 
-        if total_days > 0:
-            progress_percent = int(done_days / total_days * 100)
-        else:
-            progress_percent = 0
+        # Проверяем, отмечена ли привычка сегодня
+        today = timezone.now().date()
+        done_today = HabitLog.objects.filter(habit=habit, date=today, is_done=True).exists()
 
-        # передаём всё в шаблон
-        context['logs'] = logs
-        context['total_days'] = total_days
-        context['done_days'] = done_days
-        context['progress_percent'] = progress_percent
-        context['period_days'] = period_days
-        context['title'] = f'История привычки: {habit.title}'
+        # Передаем в шаблон
+        context.update({
+            'logs': logs,
+            'total_days': total_days,
+            'done_days': done_days,
+            'progress_percent': progress_percent,
+            'period_days': period_days,
+            'done_today': done_today,
+            'title': f'История привычки: {habit.title}'
+        })
 
         return context
+
+
+class HabitMarkDoneView(LoginRequiredMixin, View):
+    def post(self, request, slug):
+        habit = get_object_or_404(Habit, slug=slug, user=request.user)
+        today = timezone.now().date()
+
+        # Проверяем, есть ли лог за сегодня
+        log, created = HabitLog.objects.get_or_create(
+            habit=habit,
+            date=today,
+            defaults={'is_done': True}
+        )
+
+        if not created:
+            messages.info(request, "Вы уже отметили эту привычку сегодня!")
+        else:
+            messages.success(request, f"Привычка '{habit.title}' отмечена как выполненная сегодня!")
+
+        return redirect('habit_detail', slug=habit.slug)
+
 
 
 class UserLoginView(LoginView):

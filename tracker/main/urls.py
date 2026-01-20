@@ -13,4 +13,6 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(), name='logout'),
     path('signup/', UserSignUpView.as_view(), name='signup'),
     path('task/<str:slug>/', TaskDetailView.as_view(), name='task_detail'),
+    path('habit/<str:slug>/done/', HabitMarkDoneView.as_view(), name='habit_mark_done'),
+
 ]

@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 from django.conf.global_settings import MEDIA_ROOT, LOGIN_REDIRECT_URL, LOGOUT_REDIRECT_URL
@@ -135,4 +135,9 @@ INTERNAL_IPS = [ # Оптимизация сайта в дебаге
 ]
 
 
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'tracker_cache'),
+    }
+}

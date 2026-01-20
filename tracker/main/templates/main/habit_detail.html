@@ -1,21 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ habit.title }}</h1>
+<section class="habit-detail-page">
 
-<p>
-    Прогресс за {{ period_days }} дней:
-    <strong>{{ progress_percent }}%</strong>
-</p>
-
-<h2>История</h2>
-
-{% for log in logs %}
-    <div class="card">
-        {{ log.date }} —
-        {% if log.is_done %}✅ Выполнено{% else %}❌ Пропуск{% endif %}
+    <!-- Заголовок и кнопка "Выполнено сегодня" -->
+    <div class="page-header">
+        <h1>{{ habit.title }}</h1>
+        <form method="post" action="{% url 'habit_mark_done' habit.slug %}">
+            {% csrf_token %}
+            {% if done_today %}
+                <button type="submit" class="btn btn-disabled" disabled>Выполнено сегодня ✅</button>
+            {% else %}
+                <button type="submit" class="btn btn-add">Выполнено сегодня</button>
+            {% endif %}
+        </form>
     </div>
-{% empty %}
-    <p>Нет данных</p>
-{% endfor %}
+
+    <!-- Прогресс -->
+    <div class="stats-card">
+        <div class="stats-title">Прогресс за последние {{ period_days }} дней</div>
+        <div class="stats-value">{{ progress_percent }}%</div>
+    </div>
+
+    <!-- История привычки -->
+    <h2 class="section-title">История привычки</h2>
+    {% if logs %}
+        <div class="cards-grid">
+            {% for log in logs %}
+                <div class="card habit-log-card">
+                    <div class="card-meta">
+                        {{ log.date }} —
+                        {% if log.is_done %}✅ Выполнено{% else %}❌ Пропуск{% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty-text">Нет данных за выбранный период</p>
+    {% endif %}
+
+</section>
 {% endblock %}
