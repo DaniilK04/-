@@ -40,8 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar', # Оптимизация сайта в дебаге
+    'captcha', # Установил каптчу
     'main.apps.MainConfig',
 ]
+CAPTCHA_FONT_SIZE = 30      # размер шрифта
+CAPTCHA_IMAGE_SIZE = (150, 50)  # ширина, высота
+CAPTCHA_LENGTH = 5         # количество символов
+CAPTCHA_TIMEOUT = 5        # время жизни (в минутах)
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

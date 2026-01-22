@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from .models import *
+from captcha.fields import CaptchaField, CaptchaTextInput
+
 
 class TaskFilterForm(forms.Form):
     search = forms.CharField(
@@ -133,6 +135,13 @@ class CustomLoginForm(AuthenticationForm):
 
 
 class CustomSingUpForm(UserCreationForm):
+    captcha = CaptchaField(
+        label='Введите код с картинки',
+        widget=CaptchaTextInput(attrs={
+            'class': 'form-input',
+            'placeholder': 'Введите код',
+        })
+    )
     username = forms.CharField(
         label="Логин",
         widget=forms.TextInput(attrs={
