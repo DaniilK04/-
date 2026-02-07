@@ -47,5 +47,5 @@ Task_Habit_Tracker/
 │   │
 │   └── db/                       # Файл базы данных SQLite
 │
-├── .venv/                        # Виртуальное окружение
 └── .gitignore
+
