@@ -29,7 +29,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -143,6 +142,6 @@ INTERNAL_IPS = [ # Оптимизация сайта в дебаге
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'tracker_cache'),
+        'LOCATION': os.path.join( BASE_DIR, 'tracker_cache'),
     }
 }
